@@ -21,7 +21,11 @@ class TaskController extends Controller
 {
     public function index(Request $request)
     {
-        $status = $request->has('status') ? TaskStatus::from($request->input('status')) : null;
+        $status = null;
+
+        if ($status = $request->input('status')) {
+            $status = TaskStatus::from($status);
+        }
 
         $tasks = $request->user() ?
             GetUserTasks::handle($request->user(), $status) :

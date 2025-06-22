@@ -3,6 +3,7 @@ import AppLayout from '@/Layouts/AppLayout.vue';
 import Task from '@/Components/Task.vue';
 import { router, useForm } from '@inertiajs/vue3';
 import { ref } from 'vue';
+import taskStatuses from '@/Enums/task-statuses.js';
 
 const { tasks } = defineProps({
   tasks: {
@@ -29,7 +30,7 @@ const showTasksByStatus = (status) => router.reload({
   data: {
     status,
   }
-})
+});
 </script>
 
 <template>
@@ -48,8 +49,8 @@ const showTasksByStatus = (status) => router.reload({
           </div>
 
           <div class="flex gap-x-3">
-            <button @click="showTasksByStatus('in_progress')">In progress</button>
-            <button @click="showTasksByStatus('completed')">Completed</button>
+            <button v-for="taskStatus in taskStatuses" v-bind:key="taskStatus.value"
+              @click="showTasksByStatus(taskStatus.value)">{{ taskStatus.label }}</button>
           </div>
 
           <form v-if="isTaskCreatingFormOpened" @submit.prevent="handleSubmit" class="flex flex-col gap-y-2 mt-5">
