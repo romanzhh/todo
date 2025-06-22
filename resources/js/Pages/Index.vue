@@ -5,17 +5,21 @@ import { router, useForm } from '@inertiajs/vue3';
 import { ref } from 'vue';
 import taskStatuses from '@/Enums/task-statuses.js';
 
-const { tasks } = defineProps({
+const props = defineProps({
   tasks: {
     type: Object,
     required: true,
+  },
+  status: {
+    type: String,
+    default: taskStatuses.inProgress.value,
   },
 });
 
 const form = useForm({
   title: null,
   description: null,
-  status: 'in_progress',
+  status: taskStatuses.inProgress.value,
 });
 
 const isTaskCreatingFormOpened = ref(false);
@@ -44,35 +48,38 @@ const showTasksByStatus = (status) => router.reload({
     <div class="py-12">
       <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-4">
-          <div>
-            <button type="button" @click="toggleTaskCreatingForm">Add task</button>
-          </div>
-
           <div class="flex gap-x-3">
+            <button type="button" @click="toggleTaskCreatingForm"
+              class="w-sm text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5">Add
+              task</button>
+
             <button v-for="taskStatus in taskStatuses" v-bind:key="taskStatus.value"
-              @click="showTasksByStatus(taskStatus.value)">{{ taskStatus.label }}</button>
+              class="w-sm text-gray-900 border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5"
+              :class="props.status === taskStatus.value && 'bg-gray-50'" @click="showTasksByStatus(taskStatus.value)">{{
+                taskStatus.label }}</button>
           </div>
 
-          <form v-if="isTaskCreatingFormOpened" @submit.prevent="handleSubmit" class="flex flex-col gap-y-2 mt-5">
+          <form v-if="isTaskCreatingFormOpened" @submit.prevent="handleSubmit" class="flex flex-col gap-y-3 mt-5">
             <div class="flex flex-col">
-              <label>Title</label>
-              <input v-model="form.title" class="w-1/5">
-              <div v-if="form.errors.title" class="text-red-500 font-medium">{{ form.errors.title }}</div>
+              <label class="mb-2 text-sm font-medium text-gray-900">Title</label>
+              <input v-model="form.title"
+                class="w-1/3 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5">
+              <div v-if="form.errors.title" class="mt-2 text-sm text-red-600">{{ form.errors.title }}</div>
             </div>
             <div class="flex flex-col">
-              <label>Description</label>
-              <textarea v-model="form.description" class="w-1/5"></textarea>
-              <div v-if="form.errors.description" class="text-red-500 font-medium">{{ form.errors.description }}</div>
+              <label class="mb-2 text-sm font-medium text-gray-900">Description</label>
+              <textarea v-model="form.description"
+                class="w-1/3 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5"></textarea>
+              <div v-if="form.errors.description" class="mt-2 text-sm text-red-600">{{ form.errors.description }}</div>
             </div>
             <div>
-              <button type="submit">Submit</button>
+              <button type="submit"
+                class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-1/3 px-5 py-2.5 text-center">Submit</button>
             </div>
           </form>
 
-          <div class="flex flex-col gap-y-3 mt-3">
-            <div v-for="task in tasks" v-bind:key="task.id">
-              <Task :task="task" />
-            </div>
+          <div v-if="Object.keys(tasks).length" class="flex flex-col gap-y-4 mt-3">
+            <Task :task="task" v-for="task in props.tasks" v-bind:key="task.id" />
           </div>
         </div>
       </div>

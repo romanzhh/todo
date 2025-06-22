@@ -1,6 +1,6 @@
 export default {
     all: {
-        value: "",
+        value: null,
         label: "All",
     },
     inProgress: {

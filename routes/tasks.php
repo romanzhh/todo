@@ -14,3 +14,6 @@ Route::delete('/tasks/{id}', [TaskController::class, 'destroy'])
 
 Route::patch('/tasks/{id}/complete', [TaskController::class, 'complete'])
     ->name('tasks.complete');
+
+Route::patch('/tasks/{id}/reopen', [TaskController::class, 'reopen'])
+    ->name('tasks.reopen');

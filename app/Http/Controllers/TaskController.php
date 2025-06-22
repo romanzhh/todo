@@ -10,6 +10,8 @@ use App\Actions\Task\DeleteSessionTask;
 use App\Actions\Task\GetUserTasks;
 use App\Actions\Task\GetSessionTasks;
 use App\Actions\Task\CreateSessionTask;
+use App\Actions\Task\ReopenSessionTask;
+use App\Actions\Task\ReopenUserTask;
 use App\DTO\TaskDTO;
 use App\Enums\TaskStatus;
 use App\Http\Requests\Task\StoreTaskRequest;
@@ -33,6 +35,7 @@ class TaskController extends Controller
 
         return Inertia::render('Index', [
             'tasks' => $tasks,
+            'status' => $status,
         ]);
     }
 
@@ -60,12 +63,23 @@ class TaskController extends Controller
         return back();
     }
 
-    public function complete(Request $request, string $id): RedirectResponse
+    public function complete(Request $request, string|int $id): RedirectResponse
     {
         if ($user = $request->user()) {
             CompleteUserTask::handle($user, $id);
         } else {
             CompleteSessionTask::handle($id);
+        }
+
+        return back();
+    }
+
+    public function reopen(Request $request, string|int $id): RedirectResponse
+    {
+        if ($user = $request->user()) {
+            ReopenUserTask::handle($user, $id);
+        } else {
+            ReopenSessionTask::handle($id);
         }
 
         return back();
