@@ -12,9 +12,12 @@ use App\Actions\Task\GetSessionTasks;
 use App\Actions\Task\CreateSessionTask;
 use App\Actions\Task\ReopenSessionTask;
 use App\Actions\Task\ReopenUserTask;
+use App\Actions\Task\UpdateSessionTask;
+use App\Actions\Task\UpdateUserTask;
 use App\DTO\TaskDTO;
 use App\Enums\TaskStatus;
 use App\Http\Requests\Task\StoreTaskRequest;
+use App\Http\Requests\Task\UpdateTaskRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -47,6 +50,19 @@ class TaskController extends Controller
             CreateUserTask::handle($user, $taskDTO);
         } else {
             CreateSessionTask::handle($taskDTO);
+        }
+
+        return back();
+    }
+
+    public function update(UpdateTaskRequest $request, string|int $id): RedirectResponse
+    {
+        $taskDTO = TaskDTO::from($request->validated());
+
+        if ($user = $request->user()) {
+            UpdateUserTask::handle($user, $id, $taskDTO);
+        } else {
+            UpdateSessionTask::handle($id, $taskDTO);
         }
 
         return back();

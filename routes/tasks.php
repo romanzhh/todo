@@ -17,3 +17,6 @@ Route::patch('/tasks/{id}/complete', [TaskController::class, 'complete'])
 
 Route::patch('/tasks/{id}/reopen', [TaskController::class, 'reopen'])
     ->name('tasks.reopen');
+
+Route::put('/tasks/{id}/', [TaskController::class, 'update'])
+    ->name('tasks.update');
