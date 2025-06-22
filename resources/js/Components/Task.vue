@@ -31,20 +31,20 @@ const reopenTask = () => router.patch(route('tasks.reopen', task.id));
   <div class="w-1/3 flex flex-col gap-y-2">
     <div v-if="!isEditing" class="flex flex-col gap-y-2">
       <div>{{ task.title }}</div>
-      <div class="text-sm">{{ task.description }}</div>
+      <div class="text-sm" style="line-break: anywhere;">{{ task.description }}</div>
     </div>
 
-    <form v-else>
+    <form v-else class="flex flex-col gap-y-3 mb-2">
       <div class="flex flex-col">
         <label class="mb-2 text-sm font-medium text-gray-900">Title</label>
         <input v-model="form.title"
-          class="w-1/3 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5">
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5">
         <div v-if="form.errors.title" class="mt-2 text-sm text-red-600">{{ form.errors.title }}</div>
       </div>
       <div class="flex flex-col">
         <label class="mb-2 text-sm font-medium text-gray-900">Description</label>
         <textarea v-model="form.description"
-          class="w-1/3 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5"></textarea>
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5"></textarea>
         <div v-if="form.errors.description" class="mt-2 text-sm text-red-600">{{ form.errors.description }}</div>
       </div>
     </form>
